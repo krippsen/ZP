@@ -3,27 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Otázky a odpovědi</title>
+    <title>Otázky a odpovědi (Dark Mode)</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             line-height: 1.6;
-            color: #ddd;
+            color: #ddd; /* Světlejší barva textu */
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
-            background-color: #1E1E1E;
+            background-color: #1E1E1E; /* Tmavé pozadí */
         }
         
         header {
             text-align: center;
             margin-bottom: 30px;
-            border-bottom: 1px solid #333;
+            border-bottom: 1px solid #333; /* Tmavší odstín pro oddělení */
             padding-bottom: 20px;
         }
         
         h1 {
-            color: #fff;
+            color: #fff; /* Hlavní nadpis světlejší */
             font-size: 2.5rem;
         }
         
@@ -31,20 +31,25 @@
             text-align: center;
             margin-bottom: 30px;
             padding: 20px;
-            background-color: #2E2E2E;
+            background-color: #2E2E2E; /* Tmavší šedá pro rámeček */
             border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
         }
         
         .file-input label {
             display: block;
             margin-bottom: 10px;
             font-weight: bold;
-            color: #2c3e50;
+            color: #fff;
         }
         
         .file-input input {
             margin-bottom: 15px;
+            color: #ccc; 
+            background-color: #3A3A3A; 
+            border: 1px solid #555; 
+            border-radius: 4px;
+            padding: 5px;
         }
         
         .file-input button {
@@ -73,10 +78,12 @@
             flex: 1;
             min-width: 250px;
             padding: 12px;
-            border: 1px solid #555;
+            border: 1px solid #555; /* Tmavší linka */
             border-radius: 4px;
             font-size: 1rem;
             box-sizing: border-box;
+            color: #ccc;
+            background-color: #2E2E2E;
         }
         
         .pagination {
@@ -87,18 +94,18 @@
         }
         
         .pagination button {
-            background-color: #2E2E2E;
-            border: 1px solid #ddd;
-            color: #3498db;
+            background-color: #2E2E2E; /* Tmavší pozadí */
+            border: 1px solid #444;
+            color: #3498db; 
             padding: 8px 16px;
             margin: 0 4px;
             cursor: pointer;
             border-radius: 4px;
-            transition: background-color 0.2s;
+            transition: background-color 0.2s, color 0.2s;
         }
         
         .pagination button:hover:not(.active-page) {
-            background-color: #e9ecef;
+            background-color: #3A3A3A;
         }
         
         .pagination button.active-page {
@@ -112,22 +119,22 @@
         }
         
         .qa-item {
-            background-color: #2A2A2A;
+            background-color: #2A2A2A; /* Tmavší pozadí pro box */
             border-radius: 8px;
             margin-bottom: 20px;
             overflow: hidden;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
             transition: transform 0.2s, box-shadow 0.2s;
         }
         
         .qa-item:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.25);
         }
         
         .question {
             padding: 20px;
-            background-color: #3498db;
+            background-color: #3498db; /* Zachována výrazná barva */
             color: white;
             font-weight: bold;
         }
@@ -135,20 +142,20 @@
         .answer {
             padding: 20px;
             white-space: pre-wrap;
-            border-top: 1px solid #eee;
-            color: #ddd;
+            border-top: 1px solid #333;
+            color: #ddd; /* Světlejší text */
         }
         
         .no-results {
             text-align: center;
             padding: 30px;
             font-style: italic;
-            color: #7f8c8d;
+            color: #999;
         }
         
         .info-text {
             text-align: center;
-            color: #7f8c8d;
+            color: #bbb;
             margin-top: 20px;
             padding: 30px;
         }
@@ -163,7 +170,7 @@
         .qa-counter {
             text-align: center;
             margin-bottom: 10px;
-            color: #7f8c8d;
+            color: #bbb;
         }
         
         .page-size-control {
@@ -175,12 +182,15 @@
         .page-size-control label {
             margin-right: 10px;
             white-space: nowrap;
+            color: #fff; 
         }
         
         .page-size-control select {
             padding: 8px;
             border-radius: 4px;
-            border: 1px solid #ddd;
+            border: 1px solid #555;
+            background-color: #2E2E2E;
+            color: #ccc;
         }
         
         @media (max-width: 768px) {
@@ -301,12 +311,11 @@
                 const line = lines[i];
                 
                 // Rozdělení řádku na otázku a odpověď - zvládnutí uvozovek
-                // Použití regex pro rozdělení podle čárky, která není v uvozovkách
                 let parts = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
                 
                 if (parts.length < 2) continue; // Přeskočit neplatné řádky
                 
-                let question = parts[0].replace(/^"|"$/g, '').trim(); // Odstranění uvozovek a mezer
+                let question = parts[0].replace(/^"|"$/g, '').trim(); 
                 let answer = parts[1].replace(/^"|"$/g, '').trim();
                 
                 // Nahrazení speciálních znaků jako \n
@@ -340,7 +349,7 @@
                 );
             }
             
-            // Reset stránkování a překreslení
+            // Reset stránkování
             currentPage = 1;
             renderQA();
         }
@@ -396,7 +405,7 @@
             
             if (totalPages <= 1) return;
             
-            // První stránka a předchozí
+            // Předchozí stránka
             const prevButton = document.createElement('button');
             prevButton.textContent = '«';
             prevButton.disabled = currentPage === 1;
@@ -409,12 +418,10 @@
             paginationContainer.appendChild(prevButton);
             
             // Stránky
-            // Určení rozsahu stránek k zobrazení
             const maxVisiblePages = 5;
             let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
             let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
             
-            // Korekce počátku pro zobrazení vždy max. stránek
             if (endPage - startPage + 1 < maxVisiblePages) {
                 startPage = Math.max(1, endPage - maxVisiblePages + 1);
             }
@@ -438,7 +445,6 @@
                 }
             }
             
-            // Vykreslení aktuálního rozsahu stránek
             for (let i = startPage; i <= endPage; i++) {
                 const pageButton = document.createElement('button');
                 pageButton.textContent = i;
@@ -452,7 +458,7 @@
                 paginationContainer.appendChild(pageButton);
             }
             
-            // Poslední stránka, pokud nekončíme poslední stránkou
+            // Poslední stránka, pokud není v rozsahu
             if (endPage < totalPages) {
                 if (endPage < totalPages - 1) {
                     const ellipsis = document.createElement('button');
@@ -471,7 +477,7 @@
                 paginationContainer.appendChild(lastPageBtn);
             }
             
-            // Další stránka a poslední
+            // Další stránka
             const nextButton = document.createElement('button');
             nextButton.textContent = '»';
             nextButton.disabled = currentPage === totalPages;
