@@ -224,10 +224,13 @@
     </header>
     
     <div class="file-input">
-        <label for="csvFile">Vyberte CSV soubor s otázkami a odpověďmi:</label>
-        <input type="file" id="csvFile" accept=".csv">
-        <button id="loadData">Načíst data</button>
+    <label for="csvFile">Vyberte CSV soubor s otázkami a odpověďmi, nebo načtěte z GitHubu:</label>
+    <input type="file" id="csvFile" accept=".csv">
+    <div style="display: flex; gap: 10px; justify-content: center; margin-top: 10px; flex-wrap: wrap;">
+        <button id="loadData">Načíst ze souboru</button>
+        <button id="loadFromGithub">Načíst z GitHubu</button>
     </div>
+</div>
     
     <div class="controls">
         <input type="text" id="searchBox" class="search-box" placeholder="Vyhledávat v otázkách...">
@@ -257,6 +260,7 @@
         
         // Event listenery
         document.getElementById('loadData').addEventListener('click', loadCSVData);
+        document.getElementById('loadFromGithub').addEventListener('click', loadFromGithub);
         document.getElementById('searchBox').addEventListener('input', filterQA);
         document.getElementById('pageSize').addEventListener('change', function() {
             currentPage = 1;
@@ -286,6 +290,26 @@
             };
             
             reader.readAsText(file);
+        }
+
+        function loadFromGithub() {
+                const csvUrl = 'https://krippsen.github.io/ZP/data/otazky_a_odpovedi.csv';
+                const container = document.getElementById('qaContainer');
+                container.innerHTML = '<div class="loading">Načítání dat z GitHubu...</div>';
+        
+                fetch(csvUrl)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Soubor nebyl nalezen.');
+                        }
+                        return response.text();
+                    })
+                    .then(data => {
+                        processData(data);
+                    })
+                    .catch(err => {
+                        container.innerHTML = `<div class="no-results">Chyba: ${err.message}</div>`;
+                    });
         }
         
         function processData(csv) {
